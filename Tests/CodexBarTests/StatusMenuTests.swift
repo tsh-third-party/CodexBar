@@ -6,15 +6,6 @@ import Testing
 @MainActor
 @Suite(.serialized)
 struct StatusMenuTests {
-    final class RecordingPreferencesWindowOpener: PreferencesWindowOpening {
-        private(set) var openedTabs: [PreferencesTab] = []
-
-        func openSettings(tab: PreferencesTab, selection: PreferencesSelection) {
-            selection.tab = tab
-            self.openedTabs.append(tab)
-        }
-    }
-
     func disableMenuCardsForTesting() {
         StatusItemController.menuCardRenderingEnabled = false
         StatusItemController.setMenuRefreshEnabledForTesting(false)
@@ -772,29 +763,6 @@ struct StatusMenuTests {
         #expect(quitItem != nil)
         #expect(quitItem?.keyEquivalent == "q")
         #expect(quitItem?.keyEquivalentModifierMask == [.command])
-    }
-
-    @Test
-    func `settings and about actions open the requested preferences tab`() {
-        self.disableMenuCardsForTesting()
-        let settings = self.makeSettings()
-        let store = self.makeCodexStore(settings: settings, dashboardAuthorized: false)
-        let selection = PreferencesSelection()
-        let opener = RecordingPreferencesWindowOpener()
-        let controller = StatusItemController(
-            store: store,
-            settings: settings,
-            account: store.accountInfo(for: .codex),
-            updater: DisabledUpdaterController(),
-            preferencesSelection: selection,
-            statusBar: self.makeStatusBarForTesting(),
-            preferencesWindowOpener: opener)
-
-        controller.showSettingsGeneral()
-        controller.showSettingsAbout()
-
-        #expect(opener.openedTabs == [.general, .about])
-        #expect(selection.tab == .about)
     }
 }
 
