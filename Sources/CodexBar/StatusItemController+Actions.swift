@@ -277,14 +277,7 @@ extension StatusItemController: StatusItemMenuPersistentActionDelegate {
     }
 
     private func openSettings(tab: PreferencesTab) {
-        DispatchQueue.main.async {
-            self.preferencesSelection.tab = tab
-            NSApp.activate(ignoringOtherApps: true)
-            NotificationCenter.default.post(
-                name: .codexbarOpenSettings,
-                object: nil,
-                userInfo: ["tab": tab.rawValue])
-        }
+        self.preferencesWindowOpener.openSettings(tab: tab, selection: self.preferencesSelection)
     }
 
     @objc func quit() {

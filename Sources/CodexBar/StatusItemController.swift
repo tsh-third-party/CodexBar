@@ -74,6 +74,7 @@ final class StatusItemController: NSObject, NSMenuDelegate, StatusItemControllin
     let updater: UpdaterProviding
     let managedCodexAccountCoordinator: ManagedCodexAccountCoordinator
     let codexAccountPromotionCoordinator: CodexAccountPromotionCoordinator
+    let preferencesWindowOpener: PreferencesWindowOpening
     private let statusBar: NSStatusBar
     var statusItem: NSStatusItem
     var statusItems: [UsageProvider: NSStatusItem] = [:]
@@ -238,6 +239,7 @@ final class StatusItemController: NSObject, NSMenuDelegate, StatusItemControllin
         managedCodexAccountCoordinator: ManagedCodexAccountCoordinator = ManagedCodexAccountCoordinator(),
         codexAccountPromotionCoordinator: CodexAccountPromotionCoordinator? = nil,
         statusBar: NSStatusBar = .system,
+        preferencesWindowOpener: PreferencesWindowOpening = DefaultPreferencesWindowOpener(),
         observeProviderConfigNotifications: Bool = !SettingsStore.isRunningTests)
     {
         if SettingsStore.isRunningTests {
@@ -254,6 +256,7 @@ final class StatusItemController: NSObject, NSMenuDelegate, StatusItemControllin
                 settingsStore: settings,
                 usageStore: store,
                 managedAccountCoordinator: managedCodexAccountCoordinator)
+        self.preferencesWindowOpener = preferencesWindowOpener
         self.lastConfigRevision = settings.configRevision
         self.lastProviderOrder = settings.providerOrder
         self.lastMergeIcons = settings.mergeIcons
@@ -302,6 +305,7 @@ final class StatusItemController: NSObject, NSMenuDelegate, StatusItemControllin
         updater: UpdaterProviding,
         preferencesSelection: PreferencesSelection,
         statusBar: NSStatusBar = .system,
+        preferencesWindowOpener: PreferencesWindowOpening = DefaultPreferencesWindowOpener(),
         observeProviderConfigNotifications: Bool = !SettingsStore.isRunningTests)
     {
         self.init(
@@ -313,6 +317,7 @@ final class StatusItemController: NSObject, NSMenuDelegate, StatusItemControllin
             managedCodexAccountCoordinator: ManagedCodexAccountCoordinator(),
             codexAccountPromotionCoordinator: nil,
             statusBar: statusBar,
+            preferencesWindowOpener: preferencesWindowOpener,
             observeProviderConfigNotifications: observeProviderConfigNotifications)
     }
 
